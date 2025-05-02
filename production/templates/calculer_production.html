@@ -12,12 +12,14 @@
         <label for="ingredient">Ingrédient :</label>
         <select name="ingredient" id="ingredient" required>
             {% for ingredient in ingredients %}
-                <option value="{{ ingredient.id }}">{{ ingredient.nom }}</option>
+                <option value="{{ ingredient.id }}" {% if ingredient.id|stringformat:"s" == request.POST.ingredient %}selected{% endif %}>
+                    {{ ingredient.nom }}
+                </option>
             {% endfor %}
         </select>
         <br>
         <label for="quantite">Quantité :</label>
-        <input type="number" name="quantite" id="quantite" value="1" step="0.1" required>
+        <input type="number" name="quantite" id="quantite" value="{{ request.POST.quantite|default:1 }}" step="0.1" required>
         <br>
         <button type="submit">Calculer</button>
     </form>
