@@ -15,7 +15,7 @@ def calculer_valeur(ingredient, quantite=1, cache=None):
 
     if not recettes.exists():
         valeur = 1
-        chemin = [f"{quantite} x {ingredient.nom} (foreuse)"]
+        chemin = [f"{quantite:.2f} x {ingredient.nom} (foreuse)"]
         cache[ingredient.id] = (valeur, chemin)
         return valeur, chemin
 
@@ -29,22 +29,30 @@ def calculer_valeur(ingredient, quantite=1, cache=None):
         valeur_entree = 0
         sous_chemin = []
 
-        for entree in entrees:
-            v, c = calculer_valeur(entree.ingredient, entree.quantite, cache)
-            valeur_entree += v * entree.quantite
-            sous_chemin += c
-
-        valeur_entree += recette.batiment.cout_valeur()
-
         quantite_sortie = next((s.quantite for s in sorties if s.ingredient == ingredient), 0)
         if quantite_sortie == 0:
             continue
+
+        # Calcul du nombre de fois que la recette doit être effectuée
+        nombre_recettes = quantite / quantite_sortie
+
+        for entree in entrees:
+            # Ajustement des quantités des ingrédients d'entrée
+            quantite_entree_ajustee = entree.quantite * nombre_recettes
+            v, c = calculer_valeur(entree.ingredient, quantite_entree_ajustee, cache)
+            valeur_entree += v * quantite_entree_ajustee
+            sous_chemin += c
+
+        valeur_entree += recette.batiment.cout_valeur()
 
         valeur_unitaire = valeur_entree / quantite_sortie
 
         if valeur_unitaire < meilleure_valeur:
             meilleure_valeur = valeur_unitaire
-            meilleur_chemin = sous_chemin + [f"{quantite} x {ingredient.nom} via {recette.nom} (valeur={valeur_unitaire:.2f})"]
+            meilleur_chemin = sous_chemin + [
+                f"{quantite:.2f} x {ingredient.nom} via {recette.nom} "
+                f"(valeur={valeur_unitaire:.2f}, recettes nécessaires={nombre_recettes:.3f})"
+            ]
 
     cache[ingredient.id] = (meilleure_valeur, meilleur_chemin)
     return meilleure_valeur, meilleur_chemin
