@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculer Production</title>
+</head>
+<body>
+    <h1>Calculer la valeur de production</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="ingredient">Ingrédient :</label>
+        <select name="ingredient" id="ingredient" required>
+            {% for ingredient in ingredients %}
+                <option value="{{ ingredient.id }}">{{ ingredient.nom }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="quantite">Quantité :</label>
+        <input type="number" name="quantite" id="quantite" value="1" step="0.1" required>
+        <br>
+        <button type="submit">Calculer</button>
+    </form>
+
+    {% if resultat is not None %}
+        <h2>Résultat</h2>
+        <p>Valeur totale : {{ resultat }}</p>
+        <h3>Chemin :</h3>
+        <ul>
+            {% for etape in chemin %}
+                <li>{{ etape }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
