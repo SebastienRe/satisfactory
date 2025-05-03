@@ -1,5 +1,8 @@
 from django.db import models
 
+VALEUR_VOLUME = 5
+VALEUR_ELECTRICITE = 0.4
+
 class Ingredient(models.Model):
     nom = models.CharField(max_length=100)
 
@@ -16,7 +19,7 @@ class Batiment(models.Model):
         return self.nom
 
     def cout_valeur(self):
-        return self.volume * 5 + self.electricite * 0.4
+        return self.volume * VALEUR_VOLUME + self.electricite * VALEUR_ELECTRICITE
 
 
 class Recette(models.Model):

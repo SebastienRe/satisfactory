@@ -4,9 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculer Production</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #a1a1a1;
+            background-color: #000000;
+            padding: 7%;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input[type="number"] {
+            width: 200px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        input, select {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #a1a1a1;
+            background-color: #000000;
+         }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        </style>
 </head>
 <body>
     <h1>Calculer la valeur de production</h1>
+    <a href="/admin" style="display: inline-block; margin-bottom: 20px; color: #007BFF; text-decoration: none;">Accéder à l'administration</a>
     <form method="POST">
         {% csrf_token %}
         <label for="ingredient">Ingrédient :</label>

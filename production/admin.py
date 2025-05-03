@@ -3,7 +3,7 @@ from .models import Ingredient, Batiment, Recette, IngredientRecette
 
 class IngredientRecetteInline(admin.TabularInline):
     model = IngredientRecette
-    extra = 1
+    extra = 0 # Nombre de lignes vides à afficher par défaut
 
 class RecetteAdmin(admin.ModelAdmin):
     inlines = [IngredientRecetteInline]

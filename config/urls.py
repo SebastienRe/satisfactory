@@ -23,5 +23,5 @@ from production.views import calculer_production
 urlpatterns = [
     path("admin/", admin.site.urls),
     # Autres routes existantes...
-    path('calculer-production/', calculer_production, name='calculer_production'),
+    path('', calculer_production, name='calculer_production'),
 ]
