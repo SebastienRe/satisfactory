@@ -10,7 +10,7 @@
             margin: 20px;
             color: #a1a1a1;
             background-color: #000000;
-            padding: 7%;
+            padding: 100px;
         }
         form {
             margin-bottom: 20px;
@@ -37,8 +37,38 @@
             border: none;
             cursor: pointer;
         }
+        .arborescence ul {
+            list-style: none;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .arborescence li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .arborescence li::before {
+            content: '';
+            position: absolute;
+            top: 0.9em; /* Aligne avec le texte */
+            left: 10px;
+            width: 10px;
+            height: 2px;
+            background: #555;
+        }
+
+        .arborescence li span {
+            display: inline-block;
+            background: #222;
+            color: #a1a1a1;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
         
-        </style>
+    </style>
 </head>
 <body>
     <h1>Calculer la valeur de production</h1>
@@ -62,13 +92,17 @@
 
     {% if resultat is not None %}
         <h2>Résultat</h2>
-        <p>Valeur totale : {{ resultat }}</p>
+        <p>Valeur totale : {{ resultat|floatformat:2 }}</p>
         <h3>Chemin :</h3>
-        <ul>
-            {% for etape in chemin %}
-                <li>{{ etape }}</li>
-            {% endfor %}
-        </ul>
+        <div class="arborescence">
+            <ul>
+                {% for etape in chemin %}
+                    <li style="margin-left: {{ etape.niveau|add:1|stringformat:'d' }}em;">
+                        <span>{{ etape.txt }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 </body>
 </html>

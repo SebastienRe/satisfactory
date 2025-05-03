@@ -4,13 +4,15 @@ from production.models import Recette
 # Create your views here.
 # logique de calcul (ex: services.py)
 
-def calculer_valeur(ingredient, quantite=1):
+def calculer_valeur(ingredient, quantite=1, niveau=0):  # Ajout du paramètre niveau
 
-    recettes = Recette.objects.filter(liaisons__ingredient=ingredient, liaisons__type='sortie').distinct() # Récupérer les recettes qui produisent cet ingrédient
+    recettes = Recette.objects.filter(liaisons__ingredient=ingredient, liaisons__type='sortie').distinct()
 
     if not recettes.exists(): # Si aucune recette ne produit cet ingrédient, on retourne la valeur de l'ingrédient lui-même
-        valeur = 1
-        chemin = [f"{quantite:.2f} x {ingredient.nom} (foreuse)"]
+        valeur = 0
+        chemin = [{
+            "niveau" : niveau,
+            "txt" : f"{quantite:.2f} x {ingredient.nom} (Pas de recette)"}]
         return valeur, chemin
 
     meilleure_valeur = float("inf")
@@ -32,7 +34,7 @@ def calculer_valeur(ingredient, quantite=1):
 
         for entree in entrees:
             quantite_entree_ajustee = entree.quantite * nombre_recettes # Ajustement des quantités des ingrédients d'entrée
-            v, c = calculer_valeur(entree.ingredient, quantite_entree_ajustee) # Appel récursif pour chaque ingrédient d'entrée
+            v, c = calculer_valeur(entree.ingredient, quantite_entree_ajustee, niveau + 1)  # Incrémenter le niveau
             valeur_entree += v * entree.quantite
             sous_chemin += c
 
@@ -42,9 +44,10 @@ def calculer_valeur(ingredient, quantite=1):
 
         if valeur_unitaire < meilleure_valeur:
             meilleure_valeur = valeur_unitaire
-            meilleur_chemin = sous_chemin + [
-                f"{quantite:.2f} x {ingredient.nom} via '{recette.nom}' (Valeur={valeur_unitaire:.2f}, Batiment={recette.batiment.nom}, Nb_Batiments={nombre_recettes:.3f})"
-            ]
+            meilleur_chemin = [
+                { "niveau" : niveau, 
+                 "txt" : f"{quantite:.2f} x {ingredient.nom} via '{recette.nom}' (Valeur={valeur_unitaire:.2f}, Batiment={recette.batiment.nom}, Nb_Batiments={nombre_recettes:.2f})"}
+            ] + sous_chemin
             
     return meilleure_valeur, meilleur_chemin
 
