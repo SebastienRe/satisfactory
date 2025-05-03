@@ -3,6 +3,8 @@ from production.models import Recette
 
 # Create your views here.
 # logique de calcul (ex: services.py)
+VALEUR_VOLUME = 5
+VALEUR_ELECTRICITE = 0.4
 
 def calculer_valeur(ingredient, quantite=1, niveau=0):  # Ajout du paramètre niveau
 
@@ -38,15 +40,17 @@ def calculer_valeur(ingredient, quantite=1, niveau=0):  # Ajout du paramètre ni
             valeur_entree += v * entree.quantite
             sous_chemin += c
 
-        valeur_entree += recette.batiment.cout_valeur()
+        valeur_entree += recette.batiment.volume * VALEUR_VOLUME + recette.batiment.electricite * VALEUR_ELECTRICITE
 
         valeur_unitaire = valeur_entree / quantite_sortie
 
         if valeur_unitaire < meilleure_valeur:
             meilleure_valeur = valeur_unitaire
             meilleur_chemin = [
-                { "niveau" : niveau, 
-                 "txt" : f"{quantite:.2f} x {ingredient.nom} via '{recette.nom}' (Valeur={valeur_unitaire:.2f}, Batiment={recette.batiment.nom}, Nb_Batiments={nombre_recettes:.2f})"}
+                { 
+                 "niveau" : niveau, 
+                 "txt" : f"{quantite:.2f} x {ingredient.nom} via '{recette.nom}' (Valeur={valeur_unitaire:.2f}, Batiment={recette.batiment.nom}, Nb_Batiments={nombre_recettes:.2f})"
+                }
             ] + sous_chemin
             
     return meilleure_valeur, meilleur_chemin
