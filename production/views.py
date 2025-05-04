@@ -6,6 +6,7 @@ from .models import Ingredient
 # Create your views here.
 # logique de calcul (ex: services.py)
 VALEUR_VOLUME = 5
+FOREUSE = "Foreuse"
 
 def get_ingredient(ingredient_nom):
     try:
@@ -63,6 +64,10 @@ def calculer_valeur(ingredient, quantite=1, niveau=0, visites=None):
         ingredient_elec = get_ingredient("Electricité")
         v_elect, c = calculer_valeur(ingredient_elec, recette.batiment.electricite * nombre_recettes, niveau + 1, visites.copy())
         valeur_entree += v_elect + VALEUR_VOLUME * recette.batiment.volume
+
+        # Ajouter 1 à la valeur si le bâtiment est une foreuse
+        if recette.batiment.nom == FOREUSE:
+            valeur_entree += quantite_sortie
 
         valeur_unitaire = valeur_entree / quantite_sortie
 
