@@ -16,14 +16,14 @@ class IngredientAdmin(admin.ModelAdmin):
         return format_html(
             "<br/>".join([f'<a href="{ingredientRecette.recette.get_admin_url()}">{ingredientRecette.recette.nom}</a>' for ingredientRecette in ingredientRecettes])
         )
-    recettes_entrees.short_description = "Recettes (Entrées)"
+    recettes_entrees.short_description = "Utilisées en Entrées"
 
     def recettes_sorties(self, obj):
         ingredientRecettes = obj.getRecettes('sortie')
         return format_html(
             "<br/>".join([f'<a href="{ingredientRecette.recette.get_admin_url()}">{ingredientRecette.recette.nom}</a>' for ingredientRecette in ingredientRecettes])
         )
-    recettes_sorties.short_description = "Recettes (Sorties)"
+    recettes_sorties.short_description = "Utilisées en Sorties"
 
 class RecetteAdmin(admin.ModelAdmin):
     list_display = ('nom', 'batiment')
